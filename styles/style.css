@@ -1,0 +1,49 @@
+header {
+    display: flex;
+    width: 100%;
+    height: 80px;
+    justify-content: space-between;
+    background-color: white;
+    align-items: center;
+    font-size: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.logo, ion-icon, input {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+main {
+    margin-top: 80px;
+    height: 100%;
+}
+
+.send-message {
+    width: 100%;
+    height: 80px;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+}
+
+.box {
+    display: flex;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box ion-icon {
+    font-size: 26px;
+}
+
+input {
+    border: none;
+    outline: none;
+    font-style: italic;
+    font-weight: bold;
+}
+
