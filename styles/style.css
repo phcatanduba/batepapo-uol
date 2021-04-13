@@ -1,3 +1,10 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    background-color: #F3F3F3;
+    position: relative;
+}
+
 header {
     display: flex;
     width: 100%;
@@ -11,14 +18,35 @@ header {
     left: 0;
 }
 
-.logo, ion-icon, input {
+.logo, ion-icon, input, .user, .check, .private-visibility div, .public-visibility div{
     margin-left: 5%;
     margin-right: 5%;
 }
 
 main {
-    margin-top: 80px;
-    height: 100%;
+    margin-top: 106px;
+    min-height: 1000px;
+    max-height: 100%;
+}
+
+li {
+    display: flex;
+    width: 100%;
+    min-height: 40px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.public {
+    background-color: white;
+}
+
+.private {
+    background-color: #FFDEDE;
+}
+
+.leave, .join {
+    background-color: #DCDCDC;
 }
 
 .send-message {
@@ -27,6 +55,12 @@ main {
     position: fixed;
     bottom: 0px;
     left: 0px;
+    background-color: white;
+}
+
+.name {
+    font-weight: bold;
+    margin: 0 5px;
 }
 
 .box {
@@ -43,7 +77,81 @@ main {
 input {
     border: none;
     outline: none;
-    font-style: italic;
-    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    width: 70%;
+    height: 60%;
+    font-size: 18px;
 }
+
+input::placeholder {
+    font-style: italic;
+}
+
+ion-icon {
+    cursor: pointer;
+}
+
+.menu {
+    display: none;
+    width: 100%;
+    z-index: 9999999999;
+    top: -106px;
+    right: 0px;
+    height: 200%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.on {
+    display: block;
+}
+
+.options {
+    background-color: white;
+    height: 100%;
+    margin-left: 25%;
+}
+
+.options ion-icon {
+    font-size: 35px;
+}
+
+.title-menu {
+    font-weight: bold;
+    font-size: 16px;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.contact li {
+    justify-content: space-between;
+}
+
+.user, .public-visibility, .private-visibility {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.public-visibility {
+    margin-bottom: 4px;
+}
+
+.private-visibility div, .public-visibility div{
+    display: flex;
+    align-items: center;
+}
+
+div.check {
+    display: none;
+}
+
+.check ion-icon {
+    color: #28BB25;
+    font-size: 16px;
+}
+
 
