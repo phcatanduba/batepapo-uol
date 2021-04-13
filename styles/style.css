@@ -103,7 +103,7 @@ ion-icon {
 }
 
 .on {
-    display: block;
+    display: block !important;
 }
 
 .options {
