@@ -103,13 +103,18 @@ ion-icon {
 }
 
 .on {
-    display: block !important;
+    display: flex !important;
 }
 
 .options {
     background-color: white;
     height: 100%;
-    margin-left: 25%;
+    width: 100%;
+}
+
+.back {
+    width: 40%;
+    height: 100%;
 }
 
 .options ion-icon {
