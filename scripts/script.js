@@ -7,6 +7,57 @@ const back = document.querySelector(".back");
 let warning = document.querySelector(".warning");
 let userOption = {firstTime: true, lastOption: undefined};
 let visibilityOption = {firstTime: true, lastOption: undefined};
+let username = prompt("Qual seu nome?");
+
+const sendUsername = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants", {name: username});
+sendUsername.catch(newName);
+
+setInterval(function(){
+    sendUsername.then(getMessages)
+}, 5000); 
+
+setInterval(function() {
+    const sendStatus = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/status", {name: username});
+}, 5000);
+
+function newName(error) {
+    if(error.response.status === 400) {
+        username = prompt("Digite outro nome");
+    }
+};
+
+function getMessages() {
+    promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages");
+    promise.then(loadMessages)
+};
+
+function loadMessages(response) {
+    let messagesServer = response.data;
+    let messages = document.querySelector("main ul");
+    messages.innerHTML = ""
+
+    for(let i = 0; i < messagesServer.length; i++) {
+        if(messagesServer[i].type === "status") {
+            messages.innerHTML += 
+            `<li class="leave">
+                <span class="time">${messagesServer[i].time}</span>  <span class="name">${messagesServer[i].from}</span> ${messagesServer[i].text}
+            </li>`
+        } else if(messagesServer[i].type === "message") {
+            messages.innerHTML += 
+            `<li class="public">
+                <span class="time">${messagesServer[i].time}</span>  <span class="name">${messagesServer[i].from}
+                </span> para <span class="name">${messagesServer[i].to}:</span>  ${messagesServer[i].text}
+            </li>`
+        } else {
+            messages.innerHTML += 
+            `<li class="private">
+                <span class="time">${messagesServer[i].time}</span>  <span class="name">${messagesServer[i].from}
+                </span> para <span class="name">${messagesServer[i].to}:</span>  ${messagesServer[i].text}
+            </li>`
+        };
+    }
+};
+
 
 buttonMenu.addEventListener("click", function() {
     show(menu);
@@ -34,23 +85,28 @@ visibilitys.forEach(option => {
 buttonSendMessage.addEventListener("click", sendMessage);
 
 function sendMessage() {
-    let messages = document.querySelector("main ul");
-    let message = document.querySelector("input");
+    let message = document.querySelector(".input input");
     let messageView = 'public';
-    const userName = userOption.lastOption.parentNode.querySelector("span").innerHTML;
-    const isPublic = visibilityOption.lastOption.parentNode.classList.contains("public-visibility");
+    const messageTo = "Todos"
+    const isPublic = false;
     if(!isPublic) {
-        messageView = 'private';
+        messageView = 'message';
     }
-    if(message.value !== undefined) {
-        messages.innerHTML +=  `<li class="${messageView}">
-                                    <span class="time">(09:22:28)</span>  
-                                    <span class="name">João</span> 
-                                    para 
-                                    <span class="name">${userName}:</span>  ${message.value}
-                                </li>`;
+    
+    let messageObject =         
+    {
+        from: "ph",
+        to: "Todos",
+        text: message.value,
+        type: "message"
+    };
+
+    if(messageTo === undefined) {
+        messageObject.to = "Todos";
     }
-    message.value = "";
+
+    const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages", messageObject);
+    promise.then(loadMessages);
 }
 
 function whoWillReceiveTheMessage() {
