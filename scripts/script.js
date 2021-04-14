@@ -50,6 +50,7 @@ function sendMessage() {
                                     <span class="name">${userName}:</span>  ${message.value}
                                 </li>`;
     }
+    message.value = "";
 }
 
 function whoWillReceiveTheMessage() {
