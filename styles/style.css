@@ -18,7 +18,7 @@ header {
     left: 0;
 }
 
-.logo, ion-icon, input, .user, .check, .private-visibility div, .public-visibility div{
+.logo, ion-icon, .input, .user, .check, .private-visibility div, .public-visibility div{
     margin-left: 5%;
     margin-right: 5%;
 }
@@ -161,4 +161,9 @@ div.check {
     font-size: 16px;
 }
 
+.warning {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #868686;
+}
 
