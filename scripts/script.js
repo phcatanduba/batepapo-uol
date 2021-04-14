@@ -12,8 +12,6 @@ buttonMenu.addEventListener("click", function() {
 
 back.addEventListener("click", function(){
     dontShow(menu);
-    user.firstTime = true;
-    visibility.firstTime = true;
 })
 
 users.forEach(user => {
@@ -43,6 +41,7 @@ function checkOption(optionType, option) {
         dontShow(optionType.lastOption);
         optionType.lastOption = option;
     };
+
 }
 
 function show(element) {

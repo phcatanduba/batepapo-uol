@@ -85,6 +85,8 @@ input {
 
 input::placeholder {
     font-style: italic;
+    font-weight: bold;
+    color: black;
 }
 
 ion-icon {
