@@ -3,6 +3,7 @@ const buttonSendMessage = document.querySelector(".box ion-icon");
 const menu = document.querySelector(".menu");
 const visibilitys = document.querySelectorAll(".lock");
 const back = document.querySelector(".back");
+const input = document.querySelector(".input input")
 let warning = document.querySelector(".warning");
 let userOption = {firstTime: true, lastOption: undefined};
 let visibilityOption = {firstTime: true, lastOption: undefined};
@@ -57,7 +58,7 @@ function loadMessages(response) {
                 <span class="time">(${messagesServer[i].time})</span>  <span class="name">${messagesServer[i].from}
                 </span> para <span class="name">${messagesServer[i].to}:</span>  ${messagesServer[i].text}
             </li>`
-        } else {
+        } else if(messagesServer[i].to === username){
             messages.innerHTML += 
             `<li class="private">
                 <span class="time">(${messagesServer[i].time})</span>  <span class="name">${messagesServer[i].from}
@@ -123,6 +124,11 @@ visibilitys.forEach(option => {
 });
 
 buttonSendMessage.addEventListener("click", sendMessage);
+input.addEventListener("keypress", function(e){
+    
+    if(e.key === 'Enter')
+        sendMessage();
+});
 
 function sendMessage() {
     const isPublic = visibilityOption.lastOption.parentNode.classList.contains("public-visibility");
