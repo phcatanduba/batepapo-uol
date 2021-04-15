@@ -1,20 +1,29 @@
 const buttonMenu = document.querySelector(".button-menu");
 const buttonSendMessage = document.querySelector(".box ion-icon");
 const menu = document.querySelector(".menu");
-const users = document.querySelectorAll("li");
 const visibilitys = document.querySelectorAll(".lock");
 const back = document.querySelector(".back");
 let warning = document.querySelector(".warning");
 let userOption = {firstTime: true, lastOption: undefined};
 let visibilityOption = {firstTime: true, lastOption: undefined};
+let users = document.querySelectorAll(".contact li");
 let username = prompt("Qual seu nome?");
 
+visibilityOption.lastOption = visibilitys[0].children[1];
+userOption.lastOption       = users[0].children[1];
+
 const sendUsername = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants", {name: username});
+sendUsername.then(getMessages);
 sendUsername.catch(newName);
 
 setInterval(function(){
-    sendUsername.then(getMessages)
-}, 5000); 
+    getMessages();
+}, 3000); 
+
+setInterval(function() {
+    const getParticipants = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants");
+    getParticipants.then(loadParticipants);
+}, 10000);
 
 setInterval(function() {
     const sendStatus = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/status", {name: username});
@@ -28,35 +37,73 @@ function newName(error) {
 
 function getMessages() {
     promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages");
-    promise.then(loadMessages)
+    promise.then(loadMessages);
 };
 
 function loadMessages(response) {
-    let messagesServer = response.data;
     let messages = document.querySelector("main ul");
-    messages.innerHTML = ""
+    messages.innerHTML = "";
+    let messagesServer = response.data;
 
     for(let i = 0; i < messagesServer.length; i++) {
         if(messagesServer[i].type === "status") {
             messages.innerHTML += 
             `<li class="leave">
-                <span class="time">${messagesServer[i].time}</span>  <span class="name">${messagesServer[i].from}</span> ${messagesServer[i].text}
+                <span class="time">(${messagesServer[i].time})</span>  <span class="name">${messagesServer[i].from}</span> ${messagesServer[i].text}
             </li>`
         } else if(messagesServer[i].type === "message") {
             messages.innerHTML += 
             `<li class="public">
-                <span class="time">${messagesServer[i].time}</span>  <span class="name">${messagesServer[i].from}
+                <span class="time">(${messagesServer[i].time})</span>  <span class="name">${messagesServer[i].from}
                 </span> para <span class="name">${messagesServer[i].to}:</span>  ${messagesServer[i].text}
             </li>`
         } else {
             messages.innerHTML += 
             `<li class="private">
-                <span class="time">${messagesServer[i].time}</span>  <span class="name">${messagesServer[i].from}
+                <span class="time">(${messagesServer[i].time})</span>  <span class="name">${messagesServer[i].from}
                 </span> para <span class="name">${messagesServer[i].to}:</span>  ${messagesServer[i].text}
             </li>`
         };
     }
 };
+
+function loadParticipants(response) {
+    const usersOnline = response.data;
+    const listUsersOnline = document.querySelector(".contact");
+    listUsersOnline.innerHTML = 
+    `
+    <li>
+        <div class="user">
+            <ion-icon name="people"></ion-icon> <span>Todos</span>
+        </div>
+        <div class="check">
+            <ion-icon name="checkmark-sharp"></ion-icon>
+        </div>
+    </li>`;
+
+    for(let i = 0; i < usersOnline.length; i++) {
+        listUsersOnline.innerHTML += 
+        `
+        <li>
+            <div class="user">
+                <ion-icon name="person-circle"></ion-icon> <span>${usersOnline[i].name}</span>
+            </div>
+            <div class="check">
+                <ion-icon name="checkmark-sharp"></ion-icon>
+            </div>
+        </li>`
+    };
+
+    users = document.querySelectorAll(".contact li");
+
+    users.forEach(user => {
+        let userCheck = user.children[1];
+        user.addEventListener("click", function () {
+            checkOption(userOption, userCheck);
+        });
+    });
+
+}
 
 
 buttonMenu.addEventListener("click", function() {
@@ -66,13 +113,6 @@ buttonMenu.addEventListener("click", function() {
 back.addEventListener("click", function(){
     dontShow(menu);
 })
-
-users.forEach(user => {
-    let userCheck = user.children[1];
-    user.addEventListener("click", function () {
-        checkOption(userOption, userCheck);
-    });
-});
 
 visibilitys.forEach(option => {
     let optionCheck = option.children[1];
@@ -85,29 +125,36 @@ visibilitys.forEach(option => {
 buttonSendMessage.addEventListener("click", sendMessage);
 
 function sendMessage() {
+    const isPublic = visibilityOption.lastOption.parentNode.classList.contains("public-visibility");
+    const messageTo = userOption.lastOption.parentNode.querySelector("span").innerHTML;
+
     let message = document.querySelector(".input input");
-    let messageView = 'public';
-    const messageTo = "Todos"
-    const isPublic = false;
-    if(!isPublic) {
-        messageView = 'message';
+    let messageView = 'message';
+    if(!isPublic || visibilityOption.lastOption === undefined) {
+        messageView = 'private_message';
     }
-    
-    let messageObject =         
-    {
-        from: "ph",
-        to: "Todos",
-        text: message.value,
-        type: "message"
-    };
 
     if(messageTo === undefined) {
         messageObject.to = "Todos";
     }
+    
+    let messageObject =         
+    {
+        from: username,
+        to:   messageTo,
+        text: message.value,
+        type: messageView
+    };
 
     const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages", messageObject);
-    promise.then(loadMessages);
+    promise.then(getMessages);
+    promise.catch(reloadPage);
+    message.value = "";
 }
+
+function reloadPage() {
+    window.location.reload();
+};
 
 function whoWillReceiveTheMessage() {
     const isPublic = visibilityOption.lastOption.parentNode.classList.contains("public-visibility");

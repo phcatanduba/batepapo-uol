@@ -192,3 +192,11 @@ div.check {
     color: #868686;
 }
 
+.user {
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    justify-content: flex-start;
+}
+
+
