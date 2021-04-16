@@ -16,7 +16,6 @@ let enter = document.querySelector(".login button");
 
 let username;
 enter.addEventListener("click", function(){
-    console.log("teste");
     username = document.querySelector(".login input").value;
 
     const sendUsername = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants", {name: username});
