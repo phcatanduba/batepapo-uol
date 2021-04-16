@@ -216,7 +216,6 @@ function dontShow(element) {
 //login screen intoview on page reload
 setInterval(
     function() {
-        console.log(123)
         let loginScreen = document.querySelector(".login");
         if(!(loginScreen.classList.contains("off"))) {
             window.scroll(0, 0);
