@@ -3,49 +3,62 @@ const buttonSendMessage = document.querySelector(".box ion-icon");
 const menu = document.querySelector(".menu");
 const visibilitys = document.querySelectorAll(".lock");
 const back = document.querySelector(".back");
-const input = document.querySelector(".input input")
+const input = document.querySelector(".input input");
 let warning = document.querySelector(".warning");
 let userOption = {firstTime: true, lastOption: undefined};
 let visibilityOption = {firstTime: true, lastOption: undefined};
 let users = document.querySelectorAll(".contact li");
-let username = prompt("Qual seu nome?");
 
 visibilityOption.lastOption = visibilitys[0].children[1];
 userOption.lastOption       = users[0].children[1];
 
-const sendUsername = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants", {name: username});
-sendUsername.then(getMessages);
-sendUsername.catch(newName);
+let enter = document.querySelector(".login button");
 
-setInterval(function(){
-    getMessages();
-}, 3000); 
+let username;
+enter.addEventListener("click", function(){
+    console.log("teste");
+    username = document.querySelector(".login input").value;
 
-setInterval(function() {
-    const getParticipants = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants");
-    getParticipants.then(loadParticipants);
-}, 10000);
+    const sendUsername = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants", {name: username});
+    sendUsername.then(getMessages);
+    sendUsername.catch(newName);
 
-setInterval(function() {
-    const sendStatus = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/status", {name: username});
-}, 5000);
+    setInterval(function() {
+        const getParticipants = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/participants");
+        getParticipants.then(loadParticipants);
+    }, 10000);
+    
+    setInterval(function() {
+        const sendStatus = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/status", {name: username});
+    }, 5000);
+
+    setInterval(getMessages, 3000);
+
+});
 
 function newName(error) {
     if(error.response.status === 400) {
-        username = prompt("Digite outro nome");
+        alert("Digite outro nome");
     }
 };
 
 function getMessages() {
+    let login = document.querySelector(".login .on");
+    login.classList.add("off");
+    let loading = document.querySelector(".loading");
+    loading.classList.remove("off");
     promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages");
     promise.then(loadMessages);
+
 };
 
 function loadMessages(response) {
+    let loginScreen = document.querySelector(".login");
+    loginScreen.classList.add("off");
+
     let messages = document.querySelector("main ul");
     messages.innerHTML = "";
     let messagesServer = response.data;
-
     for(let i = 0; i < messagesServer.length; i++) {
         if(messagesServer[i].type === "status") {
             messages.innerHTML += 
@@ -65,6 +78,10 @@ function loadMessages(response) {
                 </span> para <span class="name">${messagesServer[i].to}:</span>  ${messagesServer[i].text}
             </li>`
         };
+    }
+    messages = document.querySelector("main ul");
+    if(!menu.classList.contains("on")) {
+        messages.children[messages.children.length - 1].scrollIntoView();
     }
 };
 
@@ -96,7 +113,6 @@ function loadParticipants(response) {
     };
 
     users = document.querySelectorAll(".contact li");
-
     users.forEach(user => {
         let userCheck = user.children[1];
         user.addEventListener("click", function () {
@@ -104,16 +120,17 @@ function loadParticipants(response) {
         });
     });
 
-}
+};
 
 
 buttonMenu.addEventListener("click", function() {
+    window.scroll(0, 0);
     show(menu);
 });
 
 back.addEventListener("click", function(){
     dontShow(menu);
-})
+});
 
 visibilitys.forEach(option => {
     let optionCheck = option.children[1];
@@ -156,7 +173,7 @@ function sendMessage() {
     promise.then(getMessages);
     promise.catch(reloadPage);
     message.value = "";
-}
+};
 
 function reloadPage() {
     window.location.reload();
@@ -170,7 +187,7 @@ function whoWillReceiveTheMessage() {
     }   else {
         warning.innerHTML = `Enviando para ${userName} (privadamente)`;
     }
-}
+};
 
 function checkOption(optionType, option) {
     if(optionType.firstTime === true) {
@@ -187,7 +204,7 @@ function checkOption(optionType, option) {
     if(!userOption.firstTime && !visibilityOption.firstTime) {
         whoWillReceiveTheMessage();
     }
-}
+};
 
 function show(element) {
     element.classList.add("on");
@@ -195,5 +212,5 @@ function show(element) {
 
 function dontShow(element) {
     element.classList.remove("on");
-}
+};
 
