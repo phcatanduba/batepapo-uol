@@ -89,6 +89,7 @@ header {
 
 main {
     margin-top: 106px;
+    margin-bottom: 106px;
     min-height: 1000px;
     max-height: 100%;
 }
