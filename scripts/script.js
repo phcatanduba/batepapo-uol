@@ -221,4 +221,5 @@ setInterval(
         if(!(loginScreen.classList.contains("off"))) {
             window.scroll(0, 0);
         };   
-}, 10);
+}, 10
+0);
